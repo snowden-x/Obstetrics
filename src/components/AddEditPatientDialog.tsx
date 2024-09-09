@@ -67,8 +67,7 @@ export default function AddEditPatientDialog({ isOpen, onClose, patient, onSave 
         createdAt: Date.now(),
         updatedAt: Date.now()
     })
-    const [formattedBP, setFormattedBP] = useState('/')
-    const [formattedEGA, setFormattedEGA] = useState(' weeks +  days')
+
     const [bpSys, setBpSys] = useState('')
     const [bpDia, setBpDia] = useState('')
     const [egaWeeks, setEgaWeeks] = useState('')

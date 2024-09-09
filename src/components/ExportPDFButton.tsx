@@ -29,7 +29,7 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ patients }) => {
       tableRows.push(patientData);
     });
 
-    (doc as any).autoTable({
+    (doc as unknown as { autoTable: Function }).autoTable({
       head: [tableColumn],
       body: tableRows,
       startY: 20,

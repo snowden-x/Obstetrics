@@ -26,7 +26,7 @@ export default function EmptyState({ message, actionLabel = "Get Started", onAct
                 </svg>
             </div>
             <h2 className="text-2xl font-semibold mb-2 text-gray-700">
-                Oops! It's empty here
+                Oops! It&apos;s empty here
             </h2>
             <p className="text-gray-500 mb-6 max-w-md">
                 {message}

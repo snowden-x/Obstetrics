@@ -1,4 +1,4 @@
-import { openDB, DBSchema } from 'idb';
+import { openDB, DBSchema, IDBPDatabase } from 'idb';
 
 export interface PatientRecord {
     id: string;
@@ -57,9 +57,9 @@ interface MyDB extends DBSchema {
     };
 }
 
-let dbPromise: Promise<any> | null = null;
+let dbPromise: Promise<IDBPDatabase<MyDB>> | null = null;
 
-function getDB() {
+function getDB(): Promise<IDBPDatabase<MyDB>> {
     if (!dbPromise) {
         dbPromise = openDB<MyDB>('obstetrics-db', 1, {
             upgrade(db) {
@@ -73,31 +73,31 @@ function getDB() {
     return dbPromise;
 }
 
-export async function getPatients() {
+export async function getPatients(): Promise<PatientRecord[]> {
     if (typeof window === 'undefined') return [];
     const db = await getDB();
     return db.getAll('patients');
 }
 
-export async function addPatient(patient: PatientRecord) {
+export async function addPatient(patient: PatientRecord): Promise<string | null> {
     if (typeof window === 'undefined') return null;
     const db = await getDB();
     return db.add('patients', patient);
 }
 
-export async function updatePatient(patient: PatientRecord) {
+export async function updatePatient(patient: PatientRecord): Promise<string | null> {
     if (typeof window === 'undefined') return null;
     const db = await getDB();
     return db.put('patients', patient);
 }
 
-export async function deletePatient(id: string) {
+export async function deletePatient(id: string): Promise<void | null> {
     if (typeof window === 'undefined') return null;
     const db = await getDB();
     return db.delete('patients', id);
 }
 
-export async function getPatientById(id: string) {
+export async function getPatientById(id: string): Promise<PatientRecord | undefined | null> {
     if (typeof window === 'undefined') return null;
     const db = await getDB();
     return db.get('patients', id);

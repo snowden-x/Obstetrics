@@ -128,60 +128,54 @@ function formatLabel(key: string): string {
 }
 
 function formatPatientData(patient: PatientRecord): string {
-  const personalInfo = `
-  Personal Information:
-  ---------------------
-  Name: ${patient.name}
-  Age: ${patient.age}
-  Gravida: ${patient.g}
-  Para: ${patient.p}
-  EGA: ${patient.ega}
-  EDD: ${patient.edd}
-  `;
+  const capitalize = (str: string) => str.replace(/\b\w/g, char => char.toUpperCase());
 
-  const medicalInfo = `
-  Medical Information:
-  --------------------
-  Being Managed For: ${patient.beingManagedFor}
-  Complaints: ${patient.complaints}
-  Updates: ${patient.updates}
-  `;
+  const formatSection = (title: string, content: string) => `
+${capitalize(title)}:
+${'-'.repeat(title.length + 1)}
+${content.split('\n').map(line => {
+  const [key, ...value] = line.split(':');
+  return key && value.length ? `${capitalize(key.trim())}: ${capitalize(value.join(':').trim())}` : line;
+}).join('\n')}
+`;
 
-  const odq = `
-  On Direct Questioning (ODQ):
-  ----------------------------
-${Object.entries(patient.odq).map(
-    ([key, value]) => `  ${formatLabel(key)}: ${value ? 'Yes' : 'No'}`
-  ).join('\n')}
-  `;
-  
+  const personalInfo = formatSection('Personal Information', `
+Name: ${patient.name}
+Age: ${patient.age}
+Gravida: ${patient.g}
+Para: ${patient.p}
+EGA: ${patient.ega}
+EDD: ${patient.edd}
+  `.trim());
 
-  const examination = `
-  Examination:
-  ------------
-  General: ${patient.examination.general}
-  BP: ${patient.examination.vitalSigns.bp}
-  CVS: ${patient.examination.cvs}
-  RS: ${patient.examination.rs}
-  ABD: ${patient.examination.abd}
-  Uterus: ${patient.examination.uterus}
-  CNS: ${patient.examination.cns}
-  `;
+  const medicalInfo = formatSection('Medical Information', `
+Being Managed For: ${patient.beingManagedFor}
+Complaints: ${patient.complaints}
+Updates: ${patient.updates}
+  `.trim());
 
-  const medicalAssessment = `
-  Medical Assessment:
-  -------------------
-  Investigations: ${patient.investigations}
-  Impression: ${patient.impression}
-  Plan: ${patient.plan}
-  `;
+  const odq = formatSection('On Direct Questioning (ODQ)', 
+    Object.entries(patient.odq)
+      .map(([key, value]) => `${formatLabel(key)}: ${value ? 'Yes' : 'No'}`)
+      .join('\n')
+  );
 
-  const recordInfo = `
-  Record Information:
-  -------------------
-  Created At: ${new Date(patient.createdAt).toLocaleString()}
-  Updated At: ${new Date(patient.updatedAt).toLocaleString()}
-  `;
+  const examination = formatSection('Examination', `
+General: ${patient.examination.general}
+BP: ${patient.examination.vitalSigns.bp}
+CVS: ${patient.examination.cvs}
+RS: ${patient.examination.rs}
+ABD: ${patient.examination.abd}
+Uterus: ${patient.examination.uterus}
+CNS: ${patient.examination.cns}
+  `.trim());
 
-  return `${personalInfo}\n${medicalInfo}\n${odq}\n${examination}\n${medicalAssessment}\n`;
+  const medicalAssessment = formatSection('Medical Assessment', `
+Investigations: ${patient.investigations}
+Impression: ${patient.impression}
+Plan: ${patient.plan}
+  `.trim());
+
+
+  return `${personalInfo}\n\n${medicalInfo}\n\n${odq}\n\n${examination}\n\n${medicalAssessment}\n`;
 }

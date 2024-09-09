@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { FileEditIcon, Delete02Icon, UserAdd01Icon, FileDownloadIcon, Sorting01Icon, UserIcon } from "hugeicons-react"
+import { FileEditIcon, Delete02Icon, UserAdd01Icon, Sorting01Icon, UserIcon } from "hugeicons-react"
 import { getPatients, deletePatient, PatientRecord } from '@/lib/db'
 import AddEditPatientDialog from '@/components/AddEditPatientDialog'
 import DeleteConfirmDialog from '@/components/DeleteConfirmDialog'
@@ -51,7 +51,7 @@ export default function PatientList() {
 
   function handleSortChange(sortBy: string) {
     setSortOption(sortBy);
-    let sortedPatients = [...filteredPatients];
+    const sortedPatients = [...filteredPatients];
     if (sortBy === 'edd') {
       sortedPatients.sort((a, b) => new Date(a.edd).getTime() - new Date(b.edd).getTime());
     } else if (sortBy === 'name') {
