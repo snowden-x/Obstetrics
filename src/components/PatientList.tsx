@@ -148,7 +148,7 @@ export default function PatientList() {
                       <TableCell>
                         <button
                           onClick={() => handleViewPatientDetails(patient)}
-                          className="text-primary hover:underline capitalize flex items-center"
+                          className="text-primary font-medium hover:underline capitalize flex items-center"
                         >
                           <UserIcon className="mr-2 h-4 w-4" />
                           {patient.name}
