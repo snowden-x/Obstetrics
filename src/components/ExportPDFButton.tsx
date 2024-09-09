@@ -6,53 +6,48 @@ import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 
 interface ExportPDFButtonProps {
-  patients: PatientRecord[];
+    patients: PatientRecord[];
 }
 
 const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ patients }) => {
-  const capitalize = (str: string) => {
-    return str.replace(/\b\w/g, char => char.toUpperCase());
-  };
+    const capitalize = (str: string) => {
+        return str.replace(/\b\w/g, char => char.toUpperCase());
+    };
 
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-    
-    doc.text("Patient List as at: " + new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(), 14, 15);
-    const tableColumn = ["Name", "Age", "Category", "EGA", "EDD", "Managed For"];
-    const tableRows: (string | number)[][] = [];
+    const exportToPDF = () => {
+        const doc = new jsPDF();
 
-    patients.forEach(patient => {
-      const patientData = [
-        capitalize(patient.name),
-        patient.age,
-        patient.ega ? 'Pregnant' : 'Post Partum',
-        patient.ega,
-        patient.edd,
-        capitalize(patient.beingManagedFor)
-      ];
-      tableRows.push(patientData);
-    });
+        doc.text("Patient List as at: " + new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(), 14, 15);
 
-    interface AutoTableOptions {
-      head: string[][];
-      body: (string | number)[][];
-      startY: number;
-    }
+        const tableColumn = ["Name", "Age", "Category", "EGA", "EDD", "Managed For"];
+        const tableRows: (string | number)[][] = [];
 
-    (doc as unknown as { autoTable: (options: AutoTableOptions) => void }).autoTable({
-      head: [tableColumn],
-      body: tableRows,
-      startY: 20,
-    });
+        patients.forEach(patient => {
+            const patientData = [
+                capitalize(patient.name),
+                patient.age,
+                patient.ega ? 'Pregnant' : 'Post Partum',
+                patient.ega,
+                patient.edd,
+                capitalize(patient.beingManagedFor)
+            ];
+            tableRows.push(patientData);
+        });
 
-    doc.save("Patient_List.pdf");
-  };
+        (doc as any).autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: 20,
+        });
 
-  return (
-    <Button onClick={exportToPDF}>
-      <FileDown className="mr-2 h-4 w-4" /> Export to PDF
-    </Button>
-  );
+        doc.save("Patient_List.pdf");
+    };
+
+    return (
+        <Button onClick={exportToPDF}>
+            <FileDown className="mr-2 h-4 w-4" /> Export to PDF
+        </Button>
+    );
 };
 
 export default ExportPDFButton;
