@@ -10,6 +10,10 @@ interface ExportPDFButtonProps {
 }
 
 const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ patients }) => {
+  const capitalize = (str: string) => {
+    return str.replace(/\b\w/g, char => char.toUpperCase());
+  };
+
   const exportToPDF = () => {
     const doc = new jsPDF();
     
@@ -19,17 +23,23 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ patients }) => {
 
     patients.forEach(patient => {
       const patientData = [
-        patient.name,
+        capitalize(patient.name),
         patient.age,
         patient.ega ? 'Pregnant' : 'Post Partum',
         patient.ega,
         patient.edd,
-        patient.beingManagedFor
+        capitalize(patient.beingManagedFor)
       ];
       tableRows.push(patientData);
     });
 
-    (doc as unknown as { autoTable: Function }).autoTable({
+    interface AutoTableOptions {
+      head: string[][];
+      body: (string | number)[][];
+      startY: number;
+    }
+
+    (doc as unknown as { autoTable: (options: AutoTableOptions) => void }).autoTable({
       head: [tableColumn],
       body: tableRows,
       startY: 20,
