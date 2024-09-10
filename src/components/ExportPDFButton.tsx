@@ -4,6 +4,7 @@ import { FileDown } from "lucide-react"
 import { PatientRecord } from '@/lib/db';
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
+import { UserOptions } from "jspdf-autotable";
 
 interface ExportPDFButtonProps {
     patients: PatientRecord[];
@@ -34,7 +35,7 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ patients }) => {
             tableRows.push(patientData);
         });
 
-        (doc as any).autoTable({
+        (doc as jsPDF & { autoTable: (options: UserOptions) => void }).autoTable({
             head: [tableColumn],
             body: tableRows,
             startY: 20,

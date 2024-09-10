@@ -16,6 +16,7 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Obstetrics and Gynaecology",
   description: "Obstetrics and Gynaecology",
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
